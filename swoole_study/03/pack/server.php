@@ -33,8 +33,10 @@ $server->on('connect', function ($server,$fd){
 
 $server->on('receive',function (swoole_server $server,int $fd,int $reactor_id,string $data){
     var_dump("消息发送过来:".strlen($data));
-    $server->send($fd,'我是服务端');
 
+    $info = unpack('N',$data);
+    var_dump($info);
+    $server->send($fd,'我是服务端');
 });
 
 $server->on('close',function (){

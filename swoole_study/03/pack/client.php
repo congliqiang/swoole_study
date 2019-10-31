@@ -15,7 +15,7 @@ $client->connect("127.0.0.1", 9800);
 //    $client->send("123456\r\n");
 //}
 // 一次发送大量数据,拆分成小数据
-$body = json_encode(str_repeat('a',1*1024*1024));
+$body = json_encode(str_repeat('a',10));
 // 数据包头+包体
 $data = pack('N',strlen($body)).$body;
 $client->send($data);
