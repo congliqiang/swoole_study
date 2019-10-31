@@ -11,11 +11,11 @@ $client->connect("127.0.0.1", 9800);
 
 // 约定一个分隔符
 // 一次性发多条数据
-for($i = 0;$i<= 10;$i++){
-    $client->send("123456\r\n");
-}
+//for($i = 0;$i<= 10;$i++){
+//    $client->send("123456\r\n");
+//}
 // 一次发送大量数据,拆分成小数据
-$body = json_encode(str_repeat('A',12*1024*1024));
+$body = json_encode(str_repeat('a',1*1024*1024));
 // 数据包头+包体
 $data = pack('N',strlen($body)).$body;
 $client->send($data);

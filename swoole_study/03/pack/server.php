@@ -21,7 +21,7 @@ $server->set([
 //    'heartbeat_idle_time' => 10, //连接最大的空闲时间
 //    'heartbeat_check_interval'=>3, //服务器定时检查(每3秒检测)
     'open_length_check' =>  true, // 打开包长度检测特性
-    'package_max_length'    =>  200000, // 包的最大长度
+    'package_max_length'    =>  2*1024*1024, // 包的最大长度
     'package_length_type'   =>  'N', //数据包头部的长度
     'package_length_offset'  => 0,  //整体长度起始位置
     'package_body_offset'   =>  4,  //包体的长度起始位置
