@@ -11,4 +11,4 @@ $client->connect("127.0.0.1", 9800);
 for($i = 0;$i<= 10;$i++){
     $client->send("123456");
 }
-$client->recv(); //接收消息没有收到
+echo $client->recv(); //接收消息没有收到

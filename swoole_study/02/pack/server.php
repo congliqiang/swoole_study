@@ -19,7 +19,7 @@ $server->on('connect', function ($server,$fd){
 });
 
 $server->on('receive',function (swoole_server $server,int $fd,int $reactor_id,string $data){
-    echo "消息发送过来:".$fd.PHP_EOL;
+    var_dump("消息发送过来:".$fd);
 //    $server->send($fd,'我是服务端');
 });
 
