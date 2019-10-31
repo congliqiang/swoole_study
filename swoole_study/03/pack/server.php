@@ -35,7 +35,8 @@ $server->on('receive',function (swoole_server $server,int $fd,int $reactor_id,st
     var_dump("消息发送过来:".strlen($data));
 
     $info = unpack('N',$data);
-    var_dump($info);
+    var_dump($info[0]);
+    var_dump($info[1]);
     $server->send($fd,'我是服务端');
 });
 
