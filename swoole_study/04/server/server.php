@@ -66,7 +66,7 @@ $worker->onMessage = function ($conn, $message) {
     $http_resonse .= "Server: php socket server\r\n";
     $http_resonse .= "Content-length: ".strlen($content)."\r\n\r\n";
     $http_resonse .= $content;
-    fwrite($this->conn, $http_resonse);
+    fwrite($conn, $http_resonse);
 };
 $worker->start();
 
