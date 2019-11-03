@@ -23,18 +23,20 @@
      }
 
      public function start() {
-         $clientSocket = stream_socket_accept($this->socket);
-         if (!empty($clientSocket) && is_callable($this->onConnect)){
-             // 触发事件的连接的回调
-             call_user_func($this->onConnect,$clientSocket);
-         }
+         while(true){
+             $clientSocket = stream_socket_accept($this->socket);
+             if (!empty($clientSocket) && is_callable($this->onConnect)){
+                 // 触发事件的连接的回调
+                 call_user_func($this->onConnect,$clientSocket);
+             }
 
-         // 连接中读取客户端的数据
-         $buffer = fread($clientSocket,65535);
+             // 连接中读取客户端的数据
+             $buffer = fread($clientSocket,65535);
 
-         // 正常读取到数据,触发消息接收事件,响应内容
-         if(!empty($buffer) && is_callable($this->onMessage)){
-             call_user_func($this->onMessage,$clientSocket,$buffer);
+             // 正常读取到数据,触发消息接收事件,响应内容
+             if(!empty($buffer) && is_callable($this->onMessage)){
+                 call_user_func($this->onMessage,$clientSocket,$buffer);
+             }
          }
          // 连接建立成功触发事件
 //         call_user_func($this->onConnect,"参数");
