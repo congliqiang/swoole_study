@@ -1,4 +1,16 @@
 <?php
+//Linux网络编程的实验中遇到了开启server后用CTRL+C退出但是端口仍被server占用的情况，首先可以用lsof查看占用端口的进程号
+//
+//	lsof -i:端口号
+//1
+//然后kill掉占用进程，就可以再次启动server了
+//
+//	kill -9 进程号
+//1
+//当然上述还是有些麻烦，因此可以用以下一条命令替代：
+//
+//	sudo kill -9 $(lsof -i:端口号 -t)
+
  class Worker{
      //监听socket
      protected $socket = NULL;
@@ -39,6 +51,14 @@ $worker->onConnect = function ($fd) {
 $worker->onMessage = function ($conn, $message) {
     //事件回调中写业务逻辑
     var_dump($conn,$message);
+    $content="你好,我是服务端的消息";
+    $http_resonse = "HTTP/1.1 200 OK\r\n";
+    $http_resonse .= "Content-Type: text/html;charset=UTF-8\r\n";
+    $http_resonse .= "Connection: keep-alive\r\n";  // 保持连接
+    $http_resonse .= "Server: php socket server\r\n";
+    $http_resonse .= "Content-length: ".strlen($content)."\r\n\r\n";
+    $http_resonse .= $content;
+    fwrite($this->conn, $http_resonse);
 };
 $worker->start();
 
