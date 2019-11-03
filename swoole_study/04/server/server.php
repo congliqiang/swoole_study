@@ -10,6 +10,10 @@
 //当然上述还是有些麻烦，因此可以用以下一条命令替代：
 //
 //	sudo kill -9 $(lsof -i:端口号 -t)
+// 安装压测工具
+// yum -y install httpd-tools
+// 多个客户端发起请求,观察服务器的状态
+// ab -n 请求数 -c 并发数 -k 长连接
 
  class Worker{
      //监听socket
@@ -37,6 +41,8 @@
              if(!empty($buffer) && is_callable($this->onMessage)){
                  call_user_func($this->onMessage,$clientSocket,$buffer);
              }
+
+             fclose($clientSocket);
          }
          // 连接建立成功触发事件
 //         call_user_func($this->onConnect,"参数");
@@ -52,8 +58,8 @@ $worker->onConnect = function ($fd) {
 };
 $worker->onMessage = function ($conn, $message) {
     //事件回调中写业务逻辑
-    var_dump($conn,$message);
-    $content="你好,我是服务端的消息";
+//    var_dump($conn,$message);
+    $content="你好mrcc";
     $http_resonse = "HTTP/1.1 200 OK\r\n";
     $http_resonse .= "Content-Type: text/html;charset=UTF-8\r\n";
     $http_resonse .= "Connection: keep-alive\r\n";  // 保持连接
