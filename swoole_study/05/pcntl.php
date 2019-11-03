@@ -17,10 +17,11 @@ for ($i=0;$i<=5;$i++){
     }else if($pid > 0) {
         //父进程空间,返回子进程id
         $a = 2;
-        echo "父进程".$a.PHP_EOL;
+        $status = 0;
+        $pid = pcntl_wait($status); // 会返回结束的子进程信息,阻塞状态
+        echo "子进程回收了".$pid.PHP_EOL;
     }else{
         // 子进程空间
-        echo $pid.PHP_EOL;
        sleep(20);
     }
 }
