@@ -23,10 +23,12 @@ class Worker{
     //接收消息事件回调
     public $onMessage = NULL;
     public $workerNum = 2;
+    public $allSocket; // 存放所有的socket
     public function __construct($socket_address) {
         // 监听地址+端口
         $this->socket = stream_socket_server($socket_address);
-
+        stream_set_blocking($this->socket,0); //设置非阻塞
+        $this->allSocket[(int)$this->socket] = $this->socket;
     }
     // fork 进程
     public function fork(){
@@ -42,21 +44,43 @@ class Worker{
     public function accept(){
         // 创建多个子进程阻塞接收服务端socket
         while(true){
-            $clientSocket = stream_socket_accept($this->socket);
-            if (!empty($clientSocket) && is_callable($this->onConnect)){
-                // 触发事件的连接的回调
-                call_user_func($this->onConnect,$clientSocket);
+            $write=$except=[];
+            //需要监听的socket
+            $read = $this->allSocket;
+            stream_select($read,$write,$except,60);
+            //怎么区分服务端还是客户端
+            foreach ($read as $index => $value){
+                if($value==$this->socket){ //当前发生改变的是服务端,有连接进入
+                    $clientSocket = stream_socket_accept($this->socket);
+                    if (!empty($clientSocket) && is_callable($this->onConnect)){
+                        // 触发事件的连接的回调
+                        call_user_func($this->onConnect,$clientSocket);
+                    }
+                    $this->allSocket[(int)$clientSocket]=$clientSocket;
+                }else{
+                    // 连接中读取客户端的数据
+                    $buffer = fread($value,65535);
+                    // 如果数据为空, 或者为false,或者不是资源类型
+                    if(empty($buffer)){
+                        if(feof($value) || !is_resource($value)){
+                            // 触发关闭事件
+                            fclose($value);
+                            unset($this->allSocket[(int)$value]);
+                            continue;
+                        }
+                    }
+                    // 正常读取到数据,触发消息接收事件,响应内容
+                    if(!empty($buffer) && is_callable($this->onMessage)){
+                        call_user_func($this->onMessage,$value,$buffer);
+                    }
+//                    var_dump($value);
+                }
+                //                var_dump($value);
             }
 
-            // 连接中读取客户端的数据
-            $buffer = fread($clientSocket,65535);
 
-            // 正常读取到数据,触发消息接收事件,响应内容
-            if(!empty($buffer) && is_callable($this->onMessage)){
-                call_user_func($this->onMessage,$clientSocket,$buffer);
-            }
 
-            fclose($clientSocket);
+//            fclose($clientSocket);
         }
         // 连接建立成功触发事件
 //         call_user_func($this->onConnect,"参数");
