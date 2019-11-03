@@ -7,6 +7,8 @@
  */
 // 查看进程
 // ps -aux|grep php
+// 以树状显示进程
+// pstree -ap|grep php
 $a = 1;
 $ppid = posix_getppid(); // 父进程id
 echo $ppid.PHP_EOL;
@@ -22,6 +24,6 @@ for ($i=0;$i<=5;$i++){
         echo "子进程回收了".$pid.PHP_EOL;
     }else{
         // 子进程空间
-       sleep(20);
+       sleep(10);
     }
 }
