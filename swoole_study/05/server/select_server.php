@@ -14,7 +14,7 @@
 // yum -y install httpd-tools
 // 多个客户端发起请求,观察服务器的状态
 // ab -n 请求数 -c 并发数 -k 长连接
-
+//select处理方式的单进程非阻塞复用的网络服务器
 class Worker{
     //监听socket
     protected $socket = NULL;
