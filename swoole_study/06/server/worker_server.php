@@ -40,7 +40,7 @@ class Worker{
             }else{
                 // 子进程空间
                 $this->accept();
-                exit();
+                exit;
             }
         }
         $status = 0;
