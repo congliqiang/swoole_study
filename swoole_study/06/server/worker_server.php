@@ -44,7 +44,7 @@ class Worker{
         }
         $status = 0;
         $pid = pcntl_wait($status); // 会返回结束的子进程信息,阻塞状态
-        echo "子进程回收了:".$pid.PHP_EOL;
+//        echo "子进程回收了:".$pid.PHP_EOL;
     }
 
     public function start() {
@@ -98,7 +98,7 @@ class Worker{
                 }
             });
         });
-        echo "非阻塞";
+//        echo "非阻塞";
     }
 }
 
