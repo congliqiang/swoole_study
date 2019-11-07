@@ -43,7 +43,9 @@ class Worker{
             }
         }
         $status = 0;
-        $pid = pcntl_wait($status); // 会返回结束的子进程信息,阻塞状态
+        for ($i=0;$i<$this->workerNum;$i++) {
+            $pid = pcntl_wait($status);// 会返回结束的子进程信息,阻塞状态
+        }
 //        echo "子进程回收了:".$pid.PHP_EOL;
     }
 
@@ -89,7 +91,7 @@ class Worker{
                 $buffer = fread($fd,65535);
                 // 如果数据为空, 或者为false,或者不是资源类型
                 if(empty($buffer)){
-                    if(feof($fd) || !is_resource($fd)){
+                    if(!is_resource($fd) || feof($fd)){
                         // 触发关闭事件
                         fclose($fd);
                     }
