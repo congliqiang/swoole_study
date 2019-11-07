@@ -62,6 +62,7 @@ class Worker{
             }else{
                 // 子进程空间
                 $this->accept();
+                exit();
             }
         }
         $pid = pcntl_wait($status); // 会返回结束的子进程信息,阻塞状态
@@ -76,6 +77,7 @@ class Worker{
         $context = stream_context_create($opts);
         // 开启多端口的监听,并且实现负载均衡
         stream_context_set_option($context,'socket','so_reuseport',1);
+        stream_context_set_option($context,'socket','so_reuseaddr',1);
 
         $this->socket = stream_socket_server($this->addr,$errno,$errstr,STREAM_SERVER_BIND|STREAM_SERVER_LISTEN,$context);
         // 第一个需要监听的事件(服务端socket的事件),一旦监听到可读事件之后会触发
