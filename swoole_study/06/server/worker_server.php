@@ -58,7 +58,7 @@ class Worker{
                 //父进程空间,返回子进程id
                 $a = 2;
                 $status = 0;
-                echo "子进程回收了".$pid.PHP_EOL;
+//                echo "子进程回收了".$pid.PHP_EOL;
             }else{
                 // 子进程空间
                 $this->accept();
