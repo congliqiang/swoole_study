@@ -52,22 +52,7 @@ class Worker{
     public function start() {
         // 获取配置文件
         // 监听进程
-        for ($i=0;$i<=$this->workerNum;$i++){
-            $pid = pcntl_fork(); //创建成功返回子进程id
-            if ($pid < 0){
-                exit('创建失败');
-            }else if($pid > 0) {
-                //父进程空间,返回子进程id
-                $a = 2;
-                $status = 0;
-//                echo "子进程回收了".$pid.PHP_EOL;
-            }else{
-                // 子进程空间
-                $this->accept();
-                exit();
-            }
-        }
-        $pid = pcntl_wait($status); // 会返回结束的子进程信息,阻塞状态
+        $this->fork();
     }
 
     public function accept(){
@@ -102,7 +87,6 @@ class Worker{
                 }
             });
         });
-//        echo "非阻塞";
     }
 }
 
