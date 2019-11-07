@@ -40,6 +40,7 @@ class Worker{
             }else{
                 // 子进程空间
                 $this->accept();
+                exit();
             }
         }
         $status = 0;
@@ -70,10 +71,14 @@ class Worker{
         // 第一个需要监听的事件(服务端socket的事件),一旦监听到可读事件之后会触发
         swoole_event_add($this->socket,function ($fd){
             $clientSocket = stream_socket_accept($fd);
+            //触发事件的连接的回调
+            if(!empty($clientSocket) && is_callable($this->onConnect)){
+                call_user_func($this->onConnect,$clientSocket);
+            }
             // 监听客户端可读事件
             swoole_event_add($clientSocket,function ($fd){
                 // 连接中读取客户端的数据
-                $buffer = fread($fd,65535);
+                $buffer = fread($fd,1024);
                 // 如果数据为空, 或者为false,或者不是资源类型
                 if(empty($buffer)){
                     if(!is_resource($fd) || feof($fd)){
